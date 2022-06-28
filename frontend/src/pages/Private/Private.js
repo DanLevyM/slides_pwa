@@ -4,14 +4,14 @@ import { Outlet, useLocation, Navigate } from 'react-router-dom';
 
 const Private = () => {
   const {currentUser} = useContext(UserContext);
-  console.log(currentUser, 'currentUser')
+  console.log(currentUser, 'currentUser');
 
   if (!currentUser) {
-    return <Navigate to='/'/>
+    return <Navigate to="/"/>;
   }
 
   return (
-    <div className='container'>
+    <div className="container">
       <Outlet/>
     </div>
   );
