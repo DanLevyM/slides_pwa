@@ -14,7 +14,8 @@ const SignUpModal = () => {
     }
   };
 
-  const handleForm = (e) => {
+  const formRef = useRef();
+  const handleForm = async (e) => {
     e.preventDefault();
 
     if ((inputs.current[1].value.length || inputs.current[2].value.length) < 6) {
@@ -26,17 +27,37 @@ const SignUpModal = () => {
     }
 
     try {
-      
-    } catch (e) {
+      const cred = await signUp(
+        inputs.current[0].value,
+        inputs.current[1].value,
+      );
+      formRef.current.reset();
+      setValidation('');
+      console.log(cred);
 
+    } catch (e) {
+      console.error(e);
+      if (e.code === 'auth/invalid-email') {
+        setValidation('Email format invalid');
+      }
+      if (e.code === 'auth/email-already-in-use') {
+        setValidation('Email already used');
+      }
     }
+  };
+
+  const closeModal = () => {
+    setValidation('');
+    toggleModals('close');
   };
 
   return (
     <>
       {modalState.signUpModal && (
         <div className="position-fixed top-0 vw-100 vh-100">
-          <div className="position-absolute w-100 h-100 bg-dark opacity-75" onClick={() => toggleModals('close')}>
+          <div
+            className="position-absolute w-100 h-100 bg-dark opacity-75"
+            onClick={closeModal}>
 
           </div>
           <div className=" top-50 start-50 translate-middle" style={{minWidth: '400px'}}>
@@ -50,6 +71,7 @@ const SignUpModal = () => {
 
                 <div className="modal-body">
                   <form
+                    ref={formRef}
                     action="" className="sign-up-form"
                     onSubmit={handleForm}>
 
