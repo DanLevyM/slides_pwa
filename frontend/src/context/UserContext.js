@@ -1,5 +1,4 @@
 import React, { useState, useEffect, createContext } from 'react';
-
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -10,18 +9,24 @@ import { auth } from '../firebase-config';
 export const UserContext = createContext();
 
 export function UserContextProvider(props) {
+  const signUp = (email, pwd) => createUserWithEmailAndPassword(auth, email, pwd);
 
   const [currentUser, setCurrentUser] = useState();
   const [loadingData, setLoadingData] = useState(true);
 
-  const signUp = (email, pwd) => createUserWithEmailAndPassword(auth, email, pwd);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setCurrentUser(currentUser);
+      setLoadingData(false);
+    });
+    return unsubscribe;
+  }, []);
 
   // Modal
   const [modalState, setModalState] = useState({
     signUpModal: false,
     signInModal: false,
   });
-
   const toggleModals = modal => {
     if (modal === 'signIn') {
       setModalState({
@@ -44,8 +49,8 @@ export function UserContextProvider(props) {
   };
 
   return (
-    <UserContext.Provider value={{modalState, toggleModals, signUp}}>
-      {props.children}
+    <UserContext.Provider value={{modalState, toggleModals, signUp, currentUser}}>
+      {!loadingData && props.children}
     </UserContext.Provider>
   );
 }
