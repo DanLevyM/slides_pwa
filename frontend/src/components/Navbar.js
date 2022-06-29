@@ -32,12 +32,14 @@ const Navbar = () => {
             toggleModals('signUp');
           }}>Sign up
         </button>
+
         <button
           className="btn btn-primary m-1"
           onClick={() => {
             toggleModals('signIn');
           }}>Sign in
         </button>
+
         <button
           onClick={logOut}
           className="btn btn-danger m-1">Log out
