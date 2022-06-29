@@ -1,9 +1,11 @@
 import React, { useContext, useRef, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import OAuth from "./OAuth";
 
 const SignInModal = () => {
-  const { modalState, toggleModals, signIn } = useContext(UserContext);
+  const { modalState, toggleModals, signIn, currentUser } =
+    useContext(UserContext);
 
   const navigate = useNavigate();
 
@@ -21,10 +23,7 @@ const SignInModal = () => {
     e.preventDefault();
 
     try {
-      const cred = await signIn(
-        inputs.current[0].value,
-        inputs.current[1].value
-      );
+      await signIn(inputs.current[0].value, inputs.current[1].value);
       // formRef.current.reset();
       closeModal();
       // console.log(cred);
@@ -103,6 +102,8 @@ const SignInModal = () => {
 
                     <button className="btn btn-primary">Submit</button>
                   </form>
+
+                  {currentUser ? closeModal() : <OAuth />}
                 </div>
               </div>
             </div>
